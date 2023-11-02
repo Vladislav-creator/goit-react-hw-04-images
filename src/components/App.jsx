@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {Modal} from './Modal/Modal'
 // import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -24,24 +24,27 @@ const [error, setError] = useState(null);
 const [largeImage, setLargeImage] = useState({});
 const [total, setTotal] = useState(0);
 
-// useEffect(() => {
-//   if (searchQuery) {
-//   fetchGallery();
-//   }
-// }, [ searchQuery]);
-
+useEffect(() => {
+  if (!searchQuery) return;
+  
 const fetchGallery = () => {
   setShowLoader(true);
 
   fetchDataApi(searchQuery, page)
     .then(({ hits, total }) => {
       setGallery(prev => [...prev, ...hits]);
-      setPage(prev => prev + 1);
+      // setPage(prev => prev + 1);
       setTotal(total);
     })
     .catch(error => setError(error))
     .finally(() => setShowLoader(false));
 };
+fetchGallery();
+}, [ searchQuery, page]);
+
+const handleLoadMore = () => {
+  setPage(prev => prev + 1)
+}
 
 const handleFormSubmit = query => {
   if (query === searchQuery) {
@@ -79,7 +82,7 @@ return (
     {showLoader && <Loader/>}
 
     {gallery.length > 0 && !showLoader && showLoadMore() && (
-      <Button onClick={fetchGallery} />
+      <Button onClick={handleLoadMore} />
     )}
 
     {showModal && (
