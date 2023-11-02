@@ -133,8 +133,6 @@ useEffect(() => {
   }
 }, [searchQuery]);
 
-
-
 const fetchGallery = () => {
   setShowLoader(true);
 
