@@ -129,7 +129,7 @@ const [total, setTotal] = useState(0);
 
 useEffect(() => {
   if (searchQuery) {
-  fetchGallery(searchQuery);
+  fetchGallery();
   }
 }, [searchQuery]);
 
