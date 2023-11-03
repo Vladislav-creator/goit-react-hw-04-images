@@ -20,7 +20,6 @@ const [searchQuery, setSearchQuery] = useState('');
 const [page, setPage] = useState(1);
 const [showModal, setShowModal] = useState(false);
 const [showLoader, setShowLoader] = useState(false);
-const [error, setError] = useState(null);
 const [largeImage, setLargeImage] = useState({});
 const [total, setTotal] = useState(0);
 
@@ -44,7 +43,7 @@ useEffect(() => {
       setTotal(totalHits);
       setShowLoader(false);
     } catch (error) {
-      setError(error);
+      toast.error(`Error fetching data: ${error.message}`)
       
     } finally {
       setShowLoader(false);
@@ -106,10 +105,8 @@ return (
         <img src={largeImage.largeImageURL} alt={largeImage.tags} />
       </Modal>
     )}
-    {error && <p>{error.message}</p>}
     <ToastContainer autoClose={3000} theme="dark" />
      < BackToTopButton/>
-    
    </AppContent>
 );
 }
