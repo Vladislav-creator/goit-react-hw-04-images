@@ -106,7 +106,7 @@ return (
         <img src={largeImage.largeImageURL} alt={largeImage.tags} />
       </Modal>
     )}
-     {error && toast.error(`Error fetching data: ${error.message}`)};
+    {error && <p>{error.message}</p>}
     <ToastContainer autoClose={3000} theme="dark" />
      < BackToTopButton/>
     
