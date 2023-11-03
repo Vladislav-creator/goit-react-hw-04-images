@@ -7,3 +7,6 @@ export const AppContent = styled.div`
   grid-gap: 16px;
   padding-bottom: 24px;
 `;
+export const Title = styled.h2`
+ color: red;
+`;

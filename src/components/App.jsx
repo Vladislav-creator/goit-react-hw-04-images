@@ -10,7 +10,7 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from 'components/Button/Button';
 import { Loader } from 'components/Loader/Loader';
 import{BackToTopButton} from 'components/ArrowTopButton/ArrowTopButton'
-import { AppContent } from './App.module';
+import { AppContent, Title } from './App.module';
 
 export const App = () => {
 
@@ -20,32 +20,10 @@ const [searchQuery, setSearchQuery] = useState('');
 const [page, setPage] = useState(1);
 const [showModal, setShowModal] = useState(false);
 const [showLoader, setShowLoader] = useState(false);
- const [error, setError] = useState(null);
+const [error, setError] = useState(null);
 const [largeImage, setLargeImage] = useState({});
 const [total, setTotal] = useState(0);
 
-// useEffect(() => {
-//   if (!searchQuery) return;
-  
-// const fetchGallery = () => {
-//   setShowLoader(true);
-//   fetchDataApi(searchQuery, page)
-//     .then(({ hits, total, totalHits }) => {
-//       setGallery(prev => [...prev, ...hits]);
-//       setTotal(total);
-//       if (totalHits) {
-//         toast.success(`Hooray! We found ${totalHits} images.`);
-//       }
-//       if (!totalHits) {
-//         toast.warn(
-//           'Sorry, there are no images matching your search query. Please try again.')
-//       }
-//     })
-//     .catch(error => setError(error))
-//     .finally(() => setShowLoader(false));
-// };
-// fetchGallery();
-// }, [ searchQuery, page]);
 useEffect(() => {
   const fetchGallery  = async () => {
     try {
@@ -66,8 +44,8 @@ useEffect(() => {
       setTotal(totalHits);
       setShowLoader(false);
     } catch (error) {
-      setError(error)
-      toast.error('Error fetching data: ' + error);
+      setError(error);
+      
     } finally {
       setShowLoader(false);
     }
@@ -111,8 +89,8 @@ return (
   <AppContent>
     <Searchbar onSubmit={handleFormSubmit} />
 
-   
-    {!searchQuery && <h2>Please, enter search word!</h2>}
+  
+    {!searchQuery && <Title>Please, enter search word!</Title>}
     {gallery.length > 0 && (
       <ImageGallery gallery={gallery} onOpenPicture={handleOpenPicture} />
     )}
@@ -128,8 +106,10 @@ return (
         <img src={largeImage.largeImageURL} alt={largeImage.tags} />
       </Modal>
     )}
+     {error && toast.error(`Error fetching data: ${error.message}`)};
     <ToastContainer autoClose={3000} theme="dark" />
      < BackToTopButton/>
+    
    </AppContent>
 );
 }
