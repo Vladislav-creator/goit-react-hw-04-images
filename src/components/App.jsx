@@ -111,8 +111,8 @@ return (
   <AppContent>
     <Searchbar onSubmit={handleFormSubmit} />
 
-    {error && <p>{error.message}</p>}
-
+   
+    {!searchQuery && <h2>Please, enter search word!</h2>}
     {gallery.length > 0 && (
       <ImageGallery gallery={gallery} onOpenPicture={handleOpenPicture} />
     )}
