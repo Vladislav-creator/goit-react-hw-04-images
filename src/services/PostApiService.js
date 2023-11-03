@@ -57,12 +57,11 @@
 
 import axios from 'axios';
 
-export const fetchDataApi = (searchQuery, page) => {
+export  const fetchDataApi = (searchQuery, page) => {
   const URL = 'https://pixabay.com/api/';
   const KEY = '39397565-58f1881c1b7436fe337839852';
-  return axios
+  
+  return  axios
     .get(`${URL}?key=${KEY}&per_page=12&page=${page}&q=${searchQuery}`)
     .then(res => res.data);
-};
-
-
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {Modal} from './Modal/Modal'
-// import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {fetchDataApi} from 'services/PostApiService';
@@ -20,27 +20,65 @@ const [searchQuery, setSearchQuery] = useState('');
 const [page, setPage] = useState(1);
 const [showModal, setShowModal] = useState(false);
 const [showLoader, setShowLoader] = useState(false);
-const [error, setError] = useState(null);
+ const [error, setError] = useState(null);
 const [largeImage, setLargeImage] = useState({});
 const [total, setTotal] = useState(0);
 
-useEffect(() => {
-  if (!searchQuery) return;
+// useEffect(() => {
+//   if (!searchQuery) return;
   
-const fetchGallery = () => {
-  setShowLoader(true);
+// const fetchGallery = () => {
+//   setShowLoader(true);
+//   fetchDataApi(searchQuery, page)
+//     .then(({ hits, total, totalHits }) => {
+//       setGallery(prev => [...prev, ...hits]);
+//       setTotal(total);
+//       if (totalHits) {
+//         toast.success(`Hooray! We found ${totalHits} images.`);
+//       }
+//       if (!totalHits) {
+//         toast.warn(
+//           'Sorry, there are no images matching your search query. Please try again.')
+//       }
+//     })
+//     .catch(error => setError(error))
+//     .finally(() => setShowLoader(false));
+// };
+// fetchGallery();
+// }, [ searchQuery, page]);
+useEffect(() => {
+  const fetchGallery  = async () => {
+    try {
+      setShowLoader(true);
 
-  fetchDataApi(searchQuery, page)
-    .then(({ hits, total }) => {
-      setGallery(prev => [...prev, ...hits]);
-      // setPage(prev => prev + 1);
-      setTotal(total);
-    })
-    .catch(error => setError(error))
-    .finally(() => setShowLoader(false));
-};
-fetchGallery();
-}, [ searchQuery, page]);
+      const { hits, totalHits } = await fetchDataApi(searchQuery, page);
+
+      if (!totalHits) {
+        toast.warn('Sorry, there are no images matching your search query. Please try again.!');
+        return;
+      }
+
+      if (page === 1) {
+        toast.success(`Found: ${totalHits} images for your request`);
+      }
+
+      setGallery(prevHits => [...prevHits, ...hits]);
+      setTotal(totalHits);
+      setShowLoader(false);
+    } catch (error) {
+      setError(error)
+      toast.error('Error fetching data: ' + error);
+    } finally {
+      setShowLoader(false);
+    }
+  };
+
+  if (!searchQuery) {
+    return;
+  }
+
+  fetchGallery ();
+}, [searchQuery, page]);
 
 const handleLoadMore = () => {
   setPage(prev => prev + 1)
@@ -90,8 +128,8 @@ return (
         <img src={largeImage.largeImageURL} alt={largeImage.tags} />
       </Modal>
     )}
+    <ToastContainer autoClose={3000} theme="dark" />
      < BackToTopButton/>
    </AppContent>
 );
 }
-
